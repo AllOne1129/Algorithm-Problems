@@ -2,21 +2,23 @@
 #include <vector>
 using namespace std;
 
-int LIS(vector<int>&, vector<int>&, int);
+int LIS(vector<int>&, int);
 
 int main() {
+	ios_base::sync_with_stdio();
+	cin.tie();
+
 	int test;
 	cin >> test;
 	for (int n = 0; n < test; n++) {
 		int num;
 		cin >> num;
 		vector<int> sequence(num);
-		vector<int> cache(num, -1);
 		for (int i = 0; i < num; i++) {
 			cin >> sequence[i];
 		}
 
-		cout << LIS(sequence,cache,0) << endl;
+		cout << LIS(sequence, 0) << endl;
 	}
 	return 0;
 }
@@ -25,25 +27,19 @@ inline int Max(int a, int b) {
 	return a > b ? a : b;
 }
 
-int LIS(vector<int>& sequence, vector<int>& cache, int index) {
+int LIS(vector<int>& sequence, int index) {
 	if (index == sequence.size() - 1) return 1;
 
-	if (cache[index] != -1) return cache[index];
-
-	int nextIdx;
-
-	int maxNum = sequence[index];
-	int lisLength = 1;
-
-	for (nextIdx = index + 1; nextIdx < sequence.size(); nextIdx++) {
-		if (maxNum < sequence[nextIdx]) {
-			maxNum = sequence[nextIdx];
-			lisLength++;
+	int result = 1;
+	int temp = sequence[index];
+	for (int i = index + 1; i < sequence.size(); i++) {
+		if (temp < sequence[i]) {
+			temp = sequence[i];
+			result++;
 		}
 	}
 
-	cache[index] = lisLength;
+	result = Max(result, LIS(sequence, index + 1));
 
-	return Max(LIS(sequence,cache,index+1),cache[index]);
-
+	return result;
 }
