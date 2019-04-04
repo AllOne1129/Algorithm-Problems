@@ -2,7 +2,7 @@
 #include <vector>
 using namespace std;
 
-int LIS(vector<int>&, int);
+int LIS(vector<int>&);
 
 int main() {
 	ios_base::sync_with_stdio();
@@ -18,7 +18,7 @@ int main() {
 			cin >> sequence[i];
 		}
 
-		cout << LIS(sequence, 0) << endl;
+		cout << LIS(sequence) << endl;
 	}
 	return 0;
 }
@@ -27,19 +27,18 @@ inline int Max(int a, int b) {
 	return a > b ? a : b;
 }
 
-int LIS(vector<int>& sequence, int index) {
-	if (index == sequence.size() - 1) return 1;
+int LIS(vector<int>& sequence) {
+	if (sequence.empty()) return 0;
+	int result = 0;
 
-	int result = 1;
-	int temp = sequence[index];
-	for (int i = index + 1; i < sequence.size(); i++) {
-		if (temp < sequence[i]) {
-			temp = sequence[i];
-			result++;
+	for (int i = 0; i < sequence.size(); i++) {
+		vector<int> temp;
+		for (int j = i + 1; j < sequence.size(); j++) {
+			if (sequence[i] < sequence[j])
+				temp.push_back(sequence[j]);
 		}
+
+		result = Max(result, 1 + LIS(temp));
 	}
-
-	result = Max(result, LIS(sequence, index + 1));
-
 	return result;
 }
